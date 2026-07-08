@@ -17,3 +17,6 @@ npm-debug.log*
 .idea/
 .DS_Store
 Thumbs.db
+
+# draw.io - fichiers de sauvegarde temporaires
+*.bkp

@@ -1,0 +1,180 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.6 Chrome/144.0.7559.236 Electron/40.8.4 Safari/537.36" version="29.6.6">
+  <diagram id="Cas 2 - Micro-quiz adaptatif" name="Cas 2 - Micro-quiz adaptatif">
+    <mxGraphModel dx="1263" dy="720" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="826" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="p2" parent="1" style="shape=umlActor;html=1;whiteSpace=wrap;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;" value="Apprenant" vertex="1">
+          <mxGeometry height="60" width="30" x="75" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ll3" edge="1" parent="1" style="endArrow=none;dashed=1;strokeColor=#9aa4b2;html=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90" y="100" as="sourcePoint" />
+            <mxPoint x="90" y="980" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;" value="Frontend (React)" vertex="1">
+          <mxGeometry height="55" width="160" x="240" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ll5" edge="1" parent="1" source="p4" style="endArrow=none;dashed=1;strokeColor=#9aa4b2;html=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="100" as="sourcePoint" />
+            <mxPoint x="320" y="980" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;" value="API Django (evaluations)" vertex="1">
+          <mxGeometry height="55" width="160" x="480" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="ll7" edge="1" parent="1" source="p6" style="endArrow=none;dashed=1;strokeColor=#9aa4b2;html=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="560" y="100" as="sourcePoint" />
+            <mxPoint x="560" y="980" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;fontSize=12;" value="Moteur adaptatif (adaptatif.py)" vertex="1">
+          <mxGeometry height="55" width="160" x="720" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="ll9" edge="1" parent="1" source="p8" style="endArrow=none;dashed=1;strokeColor=#9aa4b2;html=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="800" y="100" as="sourcePoint" />
+            <mxPoint x="800" y="980" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="p10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;fontSize=12;" value="IA generation (generation.py + Groq)" vertex="1">
+          <mxGeometry height="55" width="160" x="950" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="ll11" edge="1" parent="1" source="p10" style="endArrow=none;dashed=1;strokeColor=#9aa4b2;html=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1030" y="100" as="sourcePoint" />
+            <mxPoint x="1030" y="980" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m12" edge="1" parent="1" style="html=1;endArrow=block;rounded=0;fontSize=11;" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;1: Lit la sous-partie, clique &#39;Passer le quiz&#39;&lt;/font&gt;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90" y="140" as="sourcePoint" />
+            <mxPoint x="320" y="140" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m13" edge="1" parent="1" style="html=1;endArrow=block;rounded=0;fontSize=11;" value="2: POST /sous-parties/{id}/micro-quiz/">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="184" as="sourcePoint" />
+            <mxPoint x="560" y="184" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m14" edge="1" parent="1" style="html=1;endArrow=block;rounded=0;fontSize=11;" value="3: demarrer_micro_quiz()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="560" y="228" as="sourcePoint" />
+            <mxPoint x="800" y="228" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m15" edge="1" parent="1" style="html=1;endArrow=block;rounded=0;fontSize=11;" value="4: generer_questions() (hors historique)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="800" y="272" as="sourcePoint" />
+            <mxPoint x="1030" y="272" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m16" edge="1" parent="1" style="html=1;endArrow=open;endFill=0;dashed=1;rounded=0;fontSize=11;" value="5: 10 questions">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1030" y="316" as="sourcePoint" />
+            <mxPoint x="800" y="316" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m17" edge="1" parent="1" style="html=1;endArrow=open;endFill=0;dashed=1;rounded=0;fontSize=11;" value="6: quiz cree">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="800" y="360" as="sourcePoint" />
+            <mxPoint x="560" y="360" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m18" edge="1" parent="1" style="html=1;endArrow=open;endFill=0;dashed=1;rounded=0;fontSize=11;" value="7: quiz (bonnes reponses masquees)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="560" y="404" as="sourcePoint" />
+            <mxPoint x="320" y="404" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m19" edge="1" parent="1" style="html=1;endArrow=open;endFill=0;dashed=1;rounded=0;fontSize=11;" value="8: affiche le quiz">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="448" as="sourcePoint" />
+            <mxPoint x="90" y="448" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m20" edge="1" parent="1" style="html=1;endArrow=block;rounded=0;fontSize=11;" value="9: repond aux 10 questions, valide">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90" y="492" as="sourcePoint" />
+            <mxPoint x="320" y="492" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m21" edge="1" parent="1" style="html=1;endArrow=block;rounded=0;fontSize=11;" value="10: POST /quiz/{id}/soumettre-micro/">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="536" as="sourcePoint" />
+            <mxPoint x="560" y="536" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m22" edge="1" parent="1" style="html=1;endArrow=block;rounded=0;fontSize=11;" value="11: soumettre_micro_quiz()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="560" y="580" as="sourcePoint" />
+            <mxPoint x="800" y="580" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s23" edge="1" parent="1" style="html=1;endArrow=block;rounded=0;fontSize=11;align=left;spacingLeft=6;" value="12: sous-partie VALIDEE -&gt; debloque la suivante">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="855" y="648" />
+              <mxPoint x="855" y="674" />
+            </Array>
+            <mxPoint x="800" y="648" as="sourcePoint" />
+            <mxPoint x="800" y="674" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m24" edge="1" parent="1" style="html=1;endArrow=block;rounded=0;fontSize=11;" value="13: generer_contenu_simplifie()">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="800" y="722" as="sourcePoint" />
+            <mxPoint x="1030" y="722" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m25" edge="1" parent="1" style="html=1;endArrow=open;endFill=0;dashed=1;rounded=0;fontSize=11;" value="14: contenu simplifie">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1030" y="766" as="sourcePoint" />
+            <mxPoint x="800" y="766" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s26" edge="1" parent="1" style="html=1;endArrow=block;rounded=0;fontSize=11;align=left;spacingLeft=6;" value="15: enregistre + demande de relire">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="855" y="810" />
+              <mxPoint x="855" y="836" />
+            </Array>
+            <mxPoint x="800" y="810" as="sourcePoint" />
+            <mxPoint x="800" y="836" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="f27" parent="1" style="shape=umlFrame;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#6b7280;fontSize=11;fontStyle=1;verticalAlign=top;align=left;width=45;height=22;" value="alt" vertex="1">
+          <mxGeometry height="232" width="600" x="520" y="618" as="geometry" />
+        </mxCell>
+        <mxCell id="d28" edge="1" parent="1" style="endArrow=none;dashed=1;strokeColor=#6b7280;html=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="520" y="694" as="sourcePoint" />
+            <mxPoint x="1120" y="694" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ch29" parent="1" style="text;html=1;align=left;fontSize=10;fontStyle=2;fontColor=#374151;" value="[ score &amp;gt;= 60% ]" vertex="1">
+          <mxGeometry height="18" width="200" x="570" y="642" as="geometry" />
+        </mxCell>
+        <mxCell id="cb30" parent="1" style="text;html=1;align=left;fontSize=10;fontStyle=2;fontColor=#374151;" value="[ score &amp;lt; 60% ]" vertex="1">
+          <mxGeometry height="18" width="220" x="528" y="696" as="geometry" />
+        </mxCell>
+        <mxCell id="m31" edge="1" parent="1" style="html=1;endArrow=open;endFill=0;dashed=1;rounded=0;fontSize=11;" value="16: resultat {score, reussi, message}">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="560" y="870" as="sourcePoint" />
+            <mxPoint x="320" y="870" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m32" edge="1" parent="1" style="html=1;endArrow=open;endFill=0;dashed=1;rounded=0;fontSize=11;" value="17: affiche le score (vert / rouge)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="914" as="sourcePoint" />
+            <mxPoint x="90" y="914" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
