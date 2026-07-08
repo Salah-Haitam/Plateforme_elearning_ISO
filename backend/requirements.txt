@@ -1,0 +1,19 @@
+# --- Cœur Django ---
+Django==5.0.6                      # Framework web principal
+djangorestframework==3.15.1       # Construction de l'API REST
+
+# --- Authentification par JWT (jetons) ---
+djangorestframework-simplejwt==5.3.1
+
+# --- Communication avec le frontend React (autre domaine/port) ---
+django-cors-headers==4.3.1
+
+# --- Configuration via variables d'environnement (.env) ---
+python-dotenv==1.0.1
+
+# --- Base de données PostgreSQL / Supabase (production) ---
+psycopg2-binary==2.9.9
+
+# --- Lecture propre de l'URL de base de données (DATABASE_URL) ---
+dj-database-url==2.1.0
+requests==2.32.3

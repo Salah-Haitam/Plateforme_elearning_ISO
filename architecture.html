@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Architecture — Plateforme e-learning ISO (Backend & IA)</title>
+</head>
+<body>
+<style>
+  :root {
+    --brand: #2563eb; --brand-ink: #1d4ed8;
+    --turq: #0891b2; --turq-ink: #0e7490;
+    --green: #059669; --green-ink: #047857;
+    --amber: #d97706; --amber-ink: #b45309;
+    --ink: #0f172a; --body: #334155; --muted: #64748b;
+    --bg: #eef2f7; --card: #ffffff; --border: #dce3ec; --line: #c3cedb;
+    --tint-brand: #eff6ff; --tint-turq: #ecfeff; --tint-green: #ecfdf5; --tint-amber: #fff7ed;
+    --shadow: 0 1px 2px rgba(15,23,42,.06), 0 6px 20px rgba(15,23,42,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --brand: #60a5fa; --brand-ink: #93c5fd;
+      --turq: #22d3ee; --turq-ink: #67e8f9;
+      --green: #34d399; --green-ink: #6ee7b7;
+      --amber: #fbbf24; --amber-ink: #fcd34d;
+      --ink: #f1f5f9; --body: #cbd5e1; --muted: #94a3b8;
+      --bg: #0b1220; --card: #131c2e; --border: #263349; --line: #33425c;
+      --tint-brand: #16233c; --tint-turq: #0d2b33; --tint-green: #0d2b23; --tint-amber: #2c2110;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"] {
+    --brand: #2563eb; --brand-ink: #1d4ed8; --turq: #0891b2; --turq-ink: #0e7490;
+    --green: #059669; --green-ink: #047857; --amber: #d97706; --amber-ink: #b45309;
+    --ink: #0f172a; --body: #334155; --muted: #64748b;
+    --bg: #eef2f7; --card: #ffffff; --border: #dce3ec; --line: #c3cedb;
+    --tint-brand: #eff6ff; --tint-turq: #ecfeff; --tint-green: #ecfdf5; --tint-amber: #fff7ed;
+    --shadow: 0 1px 2px rgba(15,23,42,.06), 0 6px 20px rgba(15,23,42,.06);
+  }
+  :root[data-theme="dark"] {
+    --brand: #60a5fa; --brand-ink: #93c5fd; --turq: #22d3ee; --turq-ink: #67e8f9;
+    --green: #34d399; --green-ink: #6ee7b7; --amber: #fbbf24; --amber-ink: #fcd34d;
+    --ink: #f1f5f9; --body: #cbd5e1; --muted: #94a3b8;
+    --bg: #0b1220; --card: #131c2e; --border: #263349; --line: #33425c;
+    --tint-brand: #16233c; --tint-turq: #0d2b33; --tint-green: #0d2b23; --tint-amber: #2c2110;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .doc {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--body);
+    padding: 40px 20px 64px; line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+
+  h1, h2, h3 { color: var(--ink); text-wrap: balance; margin: 0; }
+  h1 { font-size: clamp(1.7rem, 3.4vw, 2.3rem); font-weight: 800; letter-spacing: -.02em; }
+  .lede { color: var(--muted); margin-top: 10px; font-size: 1.02rem; max-width: 60ch; }
+
+  .eyebrow { font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+
+  /* Légende */
+  .legende { display: flex; flex-wrap: wrap; gap: 10px 20px; margin: 24px 0 8px; }
+  .leg { display: flex; align-items: center; gap: 8px; font-size: .82rem; font-weight: 600; color: var(--body); }
+  .dot { width: 12px; height: 12px; border-radius: 4px; }
+
+  /* Sections */
+  section { margin-top: 40px; }
+  .sec-titre { display: flex; align-items: baseline; gap: 12px; margin-bottom: 18px; }
+  .sec-titre h2 { font-size: 1.25rem; font-weight: 750; }
+  .sec-num { font-size: .8rem; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+  /* Étage du diagramme */
+  .etage { background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+           box-shadow: var(--shadow); padding: 16px 18px; }
+  .etage-label { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+  .etage-label .eyebrow { color: var(--tone); }
+  .etage h3 { font-size: 1rem; }
+  .etage p { margin: 4px 0 0; font-size: .88rem; color: var(--muted); }
+
+  .tone-green { --tone: var(--green-ink); }
+  .tone-brand { --tone: var(--brand-ink); }
+  .tone-turq  { --tone: var(--turq-ink); }
+  .tone-amber { --tone: var(--amber-ink); }
+
+  .etage-green { background: var(--tint-green); border-color: color-mix(in srgb, var(--green) 32%, var(--border)); }
+  .etage-brand { background: var(--tint-brand); border-color: color-mix(in srgb, var(--brand) 30%, var(--border)); }
+  .etage-turq  { background: var(--tint-turq);  border-color: color-mix(in srgb, var(--turq) 32%, var(--border)); }
+  .etage-amber { background: var(--tint-amber); border-color: color-mix(in srgb, var(--amber) 36%, var(--border)); }
+
+  /* Flèche verticale */
+  .fleche { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 0; color: var(--muted); }
+  .fleche .trait { width: 2px; height: 16px; background: var(--line); }
+  .fleche .pointe { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid var(--line); }
+  .fleche .note { font-size: .74rem; color: var(--muted); margin-bottom: 2px; }
+
+  /* Grille des 4 apps */
+  .apps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  @media (max-width: 800px) { .apps { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 460px) { .apps { grid-template-columns: 1fr; } }
+  .app { background: var(--card); border: 1px solid color-mix(in srgb, var(--brand) 24%, var(--border));
+         border-radius: 12px; padding: 14px; box-shadow: var(--shadow); }
+  .app .eyebrow { color: var(--brand-ink); }
+  .app h4 { margin: 4px 0 8px; font-size: .96rem; color: var(--ink); font-weight: 700; }
+  .app ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .app li { font-size: .78rem; color: var(--body); display: flex; gap: 7px; align-items: baseline; }
+  .app li code { font-family: ui-monospace, "SFMono-Regular", Consolas, monospace; font-size: .74rem;
+                 color: var(--brand-ink); background: var(--tint-brand); padding: 1px 5px; border-radius: 5px; white-space: nowrap; }
+  .app li span { color: var(--muted); }
+  .app.ia-lie { border-color: color-mix(in srgb, var(--amber) 45%, var(--border)); }
+  .app.ia-lie .badge-ia { display: inline-block; margin-top: 8px; font-size: .68rem; font-weight: 700;
+       color: var(--amber-ink); background: var(--tint-amber); padding: 2px 8px; border-radius: 999px;
+       border: 1px solid color-mix(in srgb, var(--amber) 40%, transparent); }
+
+  /* Panneau IA */
+  .ia-panneau { background: var(--tint-amber); border: 1.5px solid color-mix(in srgb, var(--amber) 45%, var(--border));
+                border-radius: 14px; padding: 18px; box-shadow: var(--shadow); }
+  .ia-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .ia-chip { font-weight: 800; color: #fff; background: var(--amber); padding: 6px 14px; border-radius: 10px; font-size: .9rem;
+             box-shadow: 0 4px 12px color-mix(in srgb, var(--amber) 40%, transparent); }
+  .ia-head p { margin: 0; font-size: .86rem; color: var(--amber-ink); font-weight: 600; }
+  .ia-usages { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px; }
+  @media (max-width: 800px) { .ia-usages { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 460px) { .ia-usages { grid-template-columns: 1fr; } }
+  .usage { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
+  .usage h4 { margin: 0 0 4px; font-size: .84rem; color: var(--ink); font-weight: 700; }
+  .usage p { margin: 0; font-size: .76rem; color: var(--muted); }
+  .usage code { font-family: ui-monospace, Consolas, monospace; font-size: .7rem; color: var(--amber-ink); }
+
+  /* Flux séquentiels (RAG, adaptatif) */
+  .flux { display: flex; flex-direction: column; gap: 0; }
+  .etape { display: grid; grid-template-columns: 34px 1fr; gap: 14px; align-items: start; }
+  .etape .puce { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center;
+                 font-weight: 800; font-size: .9rem; color: #fff; font-variant-numeric: tabular-nums; }
+  .etape .corps { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; box-shadow: var(--shadow); }
+  .etape .corps h4 { margin: 0 0 3px; font-size: .92rem; color: var(--ink); }
+  .etape .corps p { margin: 0; font-size: .82rem; color: var(--muted); }
+  .etape .corps code { font-family: ui-monospace, Consolas, monospace; font-size: .74rem; padding: 1px 5px; border-radius: 5px;
+                       background: var(--tint-brand); color: var(--brand-ink); }
+  .connect { width: 2px; height: 16px; background: var(--line); margin: 4px 0 4px 16px; }
+
+  .amber-p .puce { background: var(--amber); }
+  .brand-p .puce { background: var(--brand); }
+
+  .branche { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 6px 0 0 48px; }
+  @media (max-width: 560px) { .branche { grid-template-columns: 1fr; } }
+  .cas { border-radius: 10px; padding: 12px 14px; font-size: .82rem; }
+  .cas h5 { margin: 0 0 4px; font-size: .82rem; }
+  .cas.ok { background: var(--tint-green); border: 1px solid color-mix(in srgb, var(--green) 35%, var(--border)); }
+  .cas.ok h5 { color: var(--green-ink); }
+  .cas.ko { background: var(--tint-amber); border: 1px solid color-mix(in srgb, var(--amber) 35%, var(--border)); }
+  .cas.ko h5 { color: var(--amber-ink); }
+  .cas p { margin: 0; color: var(--body); }
+
+  .pied { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--border); font-size: .78rem; color: var(--muted); }
+  code.f { font-family: ui-monospace, Consolas, monospace; }
+</style>
+
+<div class="doc">
+  <div class="wrap">
+
+    <header>
+      <div class="eyebrow" style="color: var(--brand-ink);">Marsa Maroc · Plateforme e-learning ISO</div>
+      <h1 style="margin-top: 8px;">Architecture — Backend &amp; Intelligence Artificielle</h1>
+      <p class="lede">Comment une requête traverse le système : du navigateur jusqu'à la base de données, avec la couche d'IA qui génère les quiz, le contenu et les réponses du chatbot.</p>
+
+      <div class="legende">
+        <span class="leg"><span class="dot" style="background: var(--green);"></span> Client (React)</span>
+        <span class="leg"><span class="dot" style="background: var(--brand);"></span> Backend (Django / API REST)</span>
+        <span class="leg"><span class="dot" style="background: var(--turq);"></span> Base de données</span>
+        <span class="leg"><span class="dot" style="background: var(--amber);"></span> Intelligence Artificielle (Groq)</span>
+      </div>
+    </header>
+
+    <!-- ============ SECTION 1 : FLUX PRINCIPAL ============ -->
+    <section>
+      <div class="sec-titre"><span class="sec-num">01</span><h2>Le flux principal (vue en couches)</h2></div>
+
+      <div class="etage etage-green tone-green">
+        <div class="etage-label"><span class="eyebrow">Client</span></div>
+        <h3>Navigateur — application React</h3>
+        <p>Envoie des requêtes HTTP (au format JSON) et joint le jeton JWT quand l'utilisateur est connecté. Ne contient aucune logique métier.</p>
+      </div>
+
+      <div class="fleche"><span class="note">HTTP / JSON · en-tête Authorization : Bearer &lt;jeton&gt;</span><span class="trait"></span><span class="pointe"></span></div>
+
+      <div class="etage etage-brand tone-brand">
+        <div class="etage-label"><span class="eyebrow">Point d'entrée</span></div>
+        <h3><code class="f">config/urls.py</code> — le routeur de l'API</h3>
+        <p>Reçoit chaque adresse <code class="f">/api/…</code> et la dirige vers la bonne vue. C'est la « carte » de tout le backend. <code class="f">config/settings.py</code> configure la base, DRF, JWT et les rôles.</p>
+      </div>
+
+      <div class="fleche"><span class="note">dirige vers l'application concernée</span><span class="trait"></span><span class="pointe"></span></div>
+
+      <div class="apps">
+        <div class="app">
+          <span class="eyebrow">App</span>
+          <h4>utilisateurs</h4>
+          <ul>
+            <li><code>models.py</code></li>
+            <li><span>Utilisateur, rôle, email</span></li>
+            <li><code>permissions.py</code></li>
+            <li><span>accès par rôle</span></li>
+            <li><code>auth_serializers</code></li>
+            <li><span>jeton JWT</span></li>
+          </ul>
+        </div>
+        <div class="app">
+          <span class="eyebrow">App</span>
+          <h4>catalogue</h4>
+          <ul>
+            <li><code>models.py</code></li>
+            <li><span>Cours→Chapitre→<br>Sous-partie→Média</span></li>
+            <li><code>importer_cours</code></li>
+            <li><span>import du contenu</span></li>
+          </ul>
+        </div>
+        <div class="app ia-lie">
+          <span class="eyebrow">App</span>
+          <h4>evaluations</h4>
+          <ul>
+            <li><code>adaptatif.py</code></li>
+            <li><span>machine à états</span></li>
+            <li><code>generation.py</code></li>
+            <li><span>quiz + contenu (IA)</span></li>
+            <li><code>services · stats</code></li>
+            <li><span>maîtrise, dashboard</span></li>
+          </ul>
+          <span class="badge-ia">utilise l'IA ↓</span>
+        </div>
+        <div class="app ia-lie">
+          <span class="eyebrow">App</span>
+          <h4>assistant</h4>
+          <ul>
+            <li><code>rag.py</code></li>
+            <li><span>recherche documents</span></li>
+            <li><code>llm.py</code></li>
+            <li><span>appel au LLM</span></li>
+            <li><code>models.py</code></li>
+            <li><span>BaseConnaissance</span></li>
+          </ul>
+          <span class="badge-ia">utilise l'IA ↓</span>
+        </div>
+      </div>
+
+      <div class="fleche"><span class="note" style="margin-top:8px;">lisent / écrivent les données</span><span class="trait"></span><span class="pointe"></span></div>
+
+      <div class="etage etage-turq tone-turq">
+        <div class="etage-label"><span class="eyebrow">Persistance</span></div>
+        <h3>Base de données — SQLite (développement) · PostgreSQL / Supabase (production)</h3>
+        <p>Stocke tout : utilisateurs, cours, quiz, questions, résultats, progressions, historique des questions, documents. On change de base en modifiant une seule ligne du <code class="f">.env</code>.</p>
+      </div>
+    </section>
+
+    <!-- ============ SECTION 2 : LA COUCHE IA ============ -->
+    <section>
+      <div class="sec-titre"><span class="sec-num">02</span><h2>La couche Intelligence Artificielle</h2></div>
+
+      <div class="ia-panneau">
+        <div class="ia-head">
+          <span class="ia-chip">Groq — LLM (Llama)</span>
+          <p>Un seul modèle de langage, appelé par <code class="f">assistant/llm.py</code> (API compatible OpenAI, reprise automatique si limite de débit). Utilisé de 4 façons :</p>
+        </div>
+        <div class="ia-usages">
+          <div class="usage">
+            <h4>1 · Chatbot RAG</h4>
+            <p>Répond en se basant uniquement sur les documents. <code>rag.py</code> + <code>assistant/views.py</code></p>
+          </div>
+          <div class="usage">
+            <h4>2 · Génération de quiz</h4>
+            <p>Crée des QCM par lots, sans répétition. <code>generation.py</code></p>
+          </div>
+          <div class="usage">
+            <h4>3 · Contenu simplifié</h4>
+            <p>Réexplique une partie ratée plus simplement. <code>generation.py</code></p>
+          </div>
+          <div class="usage">
+            <h4>4 · Moteur adaptatif</h4>
+            <p>Décide de la suite (logique, sans LLM). <code>adaptatif.py</code> + <code>services.py</code></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SECTION 3 : ZOOM RAG ============ -->
+    <section>
+      <div class="sec-titre"><span class="sec-num">03</span><h2>Zoom : le chatbot RAG (3 étapes)</h2></div>
+      <p class="lede" style="margin-bottom:18px;">RAG = « Récupérer puis Générer ». On empêche l'IA d'inventer en l'obligeant à s'appuyer sur les documents Marsa Maroc + ISO.</p>
+
+      <div class="flux">
+        <div class="etape amber-p">
+          <div class="puce">1</div>
+          <div class="corps">
+            <h4>Rechercher</h4>
+            <p><code>rag.py</code> — cherche dans les <code>Document</code> les passages liés à la question (score par mots-clés).</p>
+          </div>
+        </div>
+        <div class="connect"></div>
+        <div class="etape amber-p">
+          <div class="puce">2</div>
+          <div class="corps">
+            <h4>Augmenter</h4>
+            <p><code>assistant/views.py</code> — construit un prompt avec une consigne stricte : « réponds UNIQUEMENT avec ces passages ».</p>
+          </div>
+        </div>
+        <div class="connect"></div>
+        <div class="etape amber-p">
+          <div class="puce">3</div>
+          <div class="corps">
+            <h4>Générer</h4>
+            <p><code>llm.py</code> → Groq rédige la réponse. Si l'information n'est pas dans les passages → « Je ne trouve pas cette information ». La conversation est enregistrée.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SECTION 4 : ZOOM ADAPTATIF ============ -->
+    <section>
+      <div class="sec-titre"><span class="sec-num">04</span><h2>Zoom : le moteur adaptatif (machine à états)</h2></div>
+      <p class="lede" style="margin-bottom:18px;">Cœur du projet, dans <code class="f">evaluations/adaptatif.py</code>. Progression en ordre strict, seuil de réussite : 60 %.</p>
+
+      <div class="flux">
+        <div class="etape brand-p">
+          <div class="puce">1</div>
+          <div class="corps"><h4>Lire une sous-partie</h4><p>Obligatoire avant de passer le quiz (marqué « lu »).</p></div>
+        </div>
+        <div class="connect"></div>
+        <div class="etape brand-p">
+          <div class="puce">2</div>
+          <div class="corps"><h4>Micro-quiz — 10 questions (générées par l'IA)</h4><p>Chaque tentative propose des questions différentes.</p></div>
+        </div>
+        <div class="branche">
+          <div class="cas ok"><h5>Score ≥ 60 %</h5><p>Sous-partie validée → la suivante se débloque.</p></div>
+          <div class="cas ko"><h5>Score &lt; 60 %</h5><p>L'IA génère une <b>version simplifiée</b> → relire → nouveau quiz.</p></div>
+        </div>
+        <div class="connect"></div>
+        <div class="etape brand-p">
+          <div class="puce">3</div>
+          <div class="corps"><h4>Quiz final du chapitre — 50 questions</h4><p>Débloqué quand toutes les sous-parties sont validées.</p></div>
+        </div>
+        <div class="branche">
+          <div class="cas ok"><h5>Score ≥ 60 %</h5><p>Chapitre validé → le chapitre suivant s'ouvre.</p></div>
+          <div class="cas ko"><h5>Score &lt; 60 %</h5><p>Relire le chapitre → quiz régénéré (nouvelles questions).</p></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="pied">
+      Toutes les questions posées sont mémorisées (<code class="f">HistoriqueQuestion</code>) pour ne jamais se répéter. Après chaque quiz, le niveau de maîtrise est mis à jour (<code class="f">ProfilCompetence</code>) et alimente le tableau de bord (<code class="f">stats.py</code>).
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
