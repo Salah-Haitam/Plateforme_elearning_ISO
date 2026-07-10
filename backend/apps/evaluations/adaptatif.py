@@ -48,6 +48,27 @@ def _prog_chap(apprenant, chap):
     return prog
 
 
+def prochaine_sous_partie(apprenant, cours, apres_sc):
+    """Renvoie la prochaine sous-partie À ÉTUDIER (débloquée = EN_COURS, non
+    validée) dans l'ordre du parcours, située après `apres_sc`.
+
+    Sert à enchaîner automatiquement : après avoir validé une sous-partie, on
+    envoie directement l'apprenant sur la suivante. Renvoie None si le chapitre
+    est terminé (place au quiz final) ou si le cours est fini.
+    """
+    ordonnees = [
+        sc
+        for chap in cours.chapitres.all().order_by("ordre")
+        for sc in chap.sous_chapitres.all().order_by("ordre")
+    ]
+    ids = [sc.id for sc in ordonnees]
+    depart = ids.index(apres_sc.id) + 1 if apres_sc.id in ids else 0
+    for sc in ordonnees[depart:]:
+        if _prog_sous(apprenant, sc).statut == Statut.EN_COURS:
+            return sc
+    return None
+
+
 def rafraichir_deverrouillage(apprenant, cours):
     """Recalcule les statuts VERROUILLE / EN_COURS selon l'ordre strict.
     Les statuts VALIDE (posés par la réussite d'un quiz) ne sont jamais annulés.
@@ -215,23 +236,39 @@ def demarrer_quiz_final(apprenant, chap):
 # ---------------------------------------------------------------------------
 
 def _corriger(quiz, soumissions):
-    """Calcule (nb_correctes, nb_questions, score_pct) et crée le Resultat + détail."""
-    ids_corrects = set(
+    """Corrige un quiz.
+
+    Renvoie (nb_correctes, nb_questions, score_pct, detail, corrections) où :
+      - `detail`      : [(question_id, est_correcte)] -> sert à créer les ReponseDonnee ;
+      - `corrections` : détail par question renvoyé au client, pour afficher le
+                        feedback vert/rouge sur chaque option :
+                        [{"question", "choisie", "correcte", "juste"}]
+    """
+    # question_id -> id de la bonne réponse (une seule par question)
+    bonne_par_question = dict(
         Reponse.objects.filter(question__quiz=quiz, est_correcte=True)
-        .values_list("id", flat=True)
+        .values_list("question_id", "id")
     )
     nb_questions = quiz.questions.count()
     nb_correctes = 0
     detail = []
+    corrections = []
     for item in soumissions:
         qid = item.get("question")
         rid = item.get("reponse")
-        correcte = rid in ids_corrects
+        bonne = bonne_par_question.get(qid)
+        correcte = bonne is not None and rid == bonne
         if correcte:
             nb_correctes += 1
         detail.append((qid, correcte))
+        corrections.append({
+            "question": qid,      # id de la question
+            "choisie": rid,       # id de la réponse choisie par l'apprenant
+            "correcte": bonne,    # id de la bonne réponse
+            "juste": correcte,    # la réponse choisie était-elle la bonne ?
+        })
     score = round(100 * nb_correctes / nb_questions, 2) if nb_questions else 0
-    return nb_correctes, nb_questions, score, detail
+    return nb_correctes, nb_questions, score, detail, corrections
 
 
 @transaction.atomic
@@ -240,7 +277,7 @@ def soumettre_micro_quiz(apprenant, quiz, soumissions):
     simplification IA si l'apprenant échoue."""
     from .models import ReponseDonnee  # import local pour éviter les cycles
 
-    nb_correctes, nb_questions, score, detail = _corriger(quiz, soumissions)
+    nb_correctes, nb_questions, score, detail, corrections = _corriger(quiz, soumissions)
     sc = quiz.sous_chapitre
 
     resultat = Resultat.objects.create(
@@ -258,10 +295,13 @@ def soumettre_micro_quiz(apprenant, quiz, soumissions):
 
     reussi = score >= SEUIL_PCT
     contenu_simplifie = None
+    suivante = None
     if reussi:
         ps.statut = Statut.VALIDE
         ps.save()
         rafraichir_deverrouillage(apprenant, sc.chapitre.cours)
+        # Sous-partie suivante à étudier (pour l'enchaînement automatique côté client)
+        suivante = prochaine_sous_partie(apprenant, sc.chapitre.cours, sc)
     else:
         # AgentContenu : on génère une version simplifiée pour la relecture
         contenu_simplifie = generer_contenu_simplifie(sc)
@@ -277,6 +317,11 @@ def soumettre_micro_quiz(apprenant, quiz, soumissions):
         "reussi": reussi, "seuil_pct": SEUIL_PCT,
         "sous_partie_validee": reussi,
         "contenu_simplifie": contenu_simplifie,
+        # Sous-partie suivante (réussite) : {id, titre} ou null si chapitre terminé
+        # (dans ce cas le client renvoie vers le parcours pour le quiz final).
+        "sous_partie_suivante": ({"id": suivante.id, "titre": suivante.titre} if suivante else None),
+        # Correction par question -> feedback vert/rouge côté client
+        "corrections": corrections,
         "message": ("Sous-partie validée !" if reussi
                     else "Score insuffisant : relisez la version simplifiée puis retentez."),
     }
@@ -287,7 +332,7 @@ def soumettre_quiz_final(apprenant, quiz, soumissions):
     """Corrige un quiz final de chapitre et valide (ou non) le chapitre."""
     from .models import ReponseDonnee
 
-    nb_correctes, nb_questions, score, detail = _corriger(quiz, soumissions)
+    nb_correctes, nb_questions, score, detail, corrections = _corriger(quiz, soumissions)
     chap = quiz.chapitre
 
     resultat = Resultat.objects.create(
@@ -315,6 +360,8 @@ def soumettre_quiz_final(apprenant, quiz, soumissions):
         "score": score, "nb_correctes": nb_correctes, "nb_questions": nb_questions,
         "reussi": reussi, "seuil_pct": SEUIL_PCT,
         "chapitre_valide": reussi,
+        # Correction par question -> feedback vert/rouge côté client
+        "corrections": corrections,
         "message": ("Chapitre validé ! Chapitre suivant débloqué." if reussi
                     else "Score insuffisant : relisez le chapitre, un nouveau quiz sera généré."),
     }

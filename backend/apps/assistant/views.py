@@ -25,7 +25,9 @@ from .llm import appeler_llm, LLMNonConfigure
 # documents fournis (c'est le cœur de la promesse « réponses basées uniquement
 # sur les documents Marsa Maroc + ISO »).
 CONSIGNE_SYSTEME = (
-    "Tu es l'assistant de formation ISO de Marsa Maroc. "
+    "Tu es l'assistant de Marsa Maroc. Tu réponds aux questions sur les normes ISO "
+    "(issues des cours) ET aux questions sur l'entreprise Marsa Maroc "
+    "(activités, ports et terminaux, historique, chiffres clés, certifications). "
     "Réponds en français, de façon claire et concise. "
     "Tu dois répondre UNIQUEMENT à partir des passages de documents fournis "
     "ci-dessous. Si la réponse ne s'y trouve pas, dis explicitement : "
