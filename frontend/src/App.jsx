@@ -19,14 +19,37 @@ export default function App() {
   return (
     <Layout>
       <Routes>
-        {/* Pages publiques */}
+        {/* Pages publiques (visiteur non connecté) */}
         <Route path="/" element={<Accueil />} />
         <Route path="/connexion" element={<Connexion />} />
         <Route path="/inscription" element={<Inscription />} />
-        <Route path="/catalogue" element={<Catalogue />} />
         <Route path="/decouverte" element={<Decouverte />} />
-        <Route path="/cours/:id" element={<CoursDetail />} />
-        <Route path="/quiz/:id" element={<Quiz />} />
+
+        {/* Contenu de formation : réservé aux utilisateurs connectés */}
+        <Route
+          path="/catalogue"
+          element={
+            <RoutePrivee>
+              <Catalogue />
+            </RoutePrivee>
+          }
+        />
+        <Route
+          path="/cours/:id"
+          element={
+            <RoutePrivee>
+              <CoursDetail />
+            </RoutePrivee>
+          }
+        />
+        <Route
+          path="/quiz/:id"
+          element={
+            <RoutePrivee>
+              <Quiz />
+            </RoutePrivee>
+          }
+        />
         {/* Parcours adaptatif guidé (apprenant connecté) */}
         <Route
           path="/cours/:id/parcours"

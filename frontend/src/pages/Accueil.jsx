@@ -1,8 +1,12 @@
-// Page d'accueil publique — hero maritime animé + présentation.
+// Page d'accueil — hero maritime animé + présentation.
+// Personnalisée si l'utilisateur est connecté (affiche son nom, masque l'inscription).
 import { Link } from "react-router-dom";
 import Reveal from "../components/Reveal";
+import { useAuth } from "../context/AuthContext";
 
 export default function Accueil() {
+  const { utilisateur } = useAuth();
+
   return (
     <>
       {/* ---- Hero avec photo de port en fond + voile bleu marine ---- */}
@@ -14,16 +18,34 @@ export default function Accueil() {
           <span></span><span></span><span></span><span></span><span></span><span></span>
         </div>
         <div className="hero-contenu">
-          <span className="badge-norme">FORMATION · NORMES ISO</span>
-          <h1>Montez en compétence sur les normes ISO, à votre rythme</h1>
+          {/* Message personnalisé si connecté, sinon libellé générique */}
+          <span className="badge-norme">
+            {utilisateur ? `Bonjour, ${utilisateur.nom} 👋` : "FORMATION · NORMES ISO"}
+          </span>
+          <h1>
+            {utilisateur
+              ? "Bon retour ! Poursuivez votre progression"
+              : "Montez en compétence sur les normes ISO, à votre rythme"}
+          </h1>
           <p>
             La plateforme de formation adaptative de Marsa Maroc : des parcours
             qui s'ajustent à votre niveau et un assistant IA fondé sur les
             documents internes et les normes ISO (27001, 9001…).
           </p>
           <div className="hero-actions">
-            <Link to="/catalogue" className="btn">Découvrir le catalogue →</Link>
-            <Link to="/decouverte" className="btn btn-secondaire">Tester mes connaissances</Link>
+            {/* Le catalogue est réservé aux connectés : on invite le visiteur à
+                se connecter plutôt que de le renvoyer vers une redirection. */}
+            {utilisateur ? (
+              <>
+                <Link to="/catalogue" className="btn">Découvrir le catalogue →</Link>
+                <Link to="/profil" className="btn btn-secondaire">Mon profil</Link>
+              </>
+            ) : (
+              <>
+                <Link to="/connexion" className="btn">Se connecter →</Link>
+                <Link to="/decouverte" className="btn btn-secondaire">Tester mes connaissances</Link>
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -61,7 +83,7 @@ export default function Accueil() {
           ))}
         </div>
 
-        {/* Bandeau d'appel à l'action */}
+        {/* Bandeau d'appel à l'action — personnalisé selon l'état de connexion */}
         <Reveal>
           <div
             className="carte"
@@ -70,9 +92,19 @@ export default function Accueil() {
               background: "linear-gradient(120deg, var(--navy), var(--bleu))", color: "#fff",
             }}
           >
-            <h2 style={{ color: "#fff" }}>Prêt à commencer ?</h2>
-            <p style={{ color: "#dbe7f2" }}>Rejoignez les collaborateurs déjà formés aux normes ISO.</p>
-            <Link to="/inscription" className="btn" style={{ marginTop: 10 }}>Je m'inscris</Link>
+            {utilisateur ? (
+              <>
+                <h2 style={{ color: "#fff" }}>Content de vous revoir, {utilisateur.nom} !</h2>
+                <p style={{ color: "#dbe7f2" }}>Reprenez votre formation aux normes ISO là où vous en étiez.</p>
+                <Link to="/catalogue" className="btn" style={{ marginTop: 10 }}>Reprendre une formation →</Link>
+              </>
+            ) : (
+              <>
+                <h2 style={{ color: "#fff" }}>Prêt à commencer ?</h2>
+                <p style={{ color: "#dbe7f2" }}>Rejoignez les collaborateurs déjà formés aux normes ISO.</p>
+                <Link to="/inscription" className="btn" style={{ marginTop: 10 }}>Je m'inscris</Link>
+              </>
+            )}
           </div>
         </Reveal>
       </div>
