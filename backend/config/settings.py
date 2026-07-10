@@ -35,6 +35,13 @@ DEBUG = os.getenv("DJANGO_DEBUG", "True") == "True"
 # Hôtes autorisés (ex : "localhost,127.0.0.1,mon-domaine.com")
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 
+# En développement (DEBUG=True), on autorise TOUS les hôtes. Cela évite l'erreur
+# « DisallowedHost » quand un téléphone (Expo Go) appelle l'API via l'IP Wi-Fi du
+# PC — IP qui change souvent selon le réseau. En production (DEBUG=False), seuls
+# les hôtes listés dans .env sont acceptés (sécurité préservée).
+if DEBUG:
+    ALLOWED_HOSTS = ["*"]
+
 
 # ---------------------------------------------------------------------------
 # Applications
@@ -104,6 +111,15 @@ if DATABASE_URL:
     DATABASES = {
         "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600)
     }
+    # Supabase passe par un « pooler » distant : sans sondes de maintien en vie,
+    # une connexion un peu longue (import de données, requête lente) peut être
+    # coupée par le serveur (« server closed the connection unexpectedly »).
+    DATABASES["default"].setdefault("OPTIONS", {}).update({
+        "keepalives": 1,
+        "keepalives_idle": 30,
+        "keepalives_interval": 10,
+        "keepalives_count": 5,
+    })
 else:
     DATABASES = {
         "default": {

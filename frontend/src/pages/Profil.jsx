@@ -1,6 +1,7 @@
 // Page « Mon profil » : infos utilisateur, résultats de quiz, et niveaux de
 // maîtrise (profils de compétence — cœur du moteur adaptatif, étape 6).
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../api";
 import { useAuth } from "../context/AuthContext";
 
@@ -43,13 +44,11 @@ export default function Profil() {
                 {reco.type === "remediation" ? "Remédiation" : "Approfondissement"}
               </span>
               <p style={{ margin: "8px 0" }}>{reco.raison}</p>
-              {reco.cours_suggere ? (
-                <a className="btn" href={`/cours/${reco.cours_suggere}`}>
-                  {reco.titre_suggere}
-                </a>
-              ) : (
-                <span className="muted">{reco.titre_suggere}</span>
-              )}
+              {/* `cours_suggere` est toujours renseigné : la recommandation mène
+                  au cours conseillé (ou au cours lui-même, à revoir). */}
+              <Link className="btn" to={`/cours/${reco.cours_suggere}`}>
+                {reco.titre_suggere} →
+              </Link>
             </div>
           ))}
         </div>

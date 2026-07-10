@@ -52,7 +52,8 @@ export default function Layout({ children }) {
 
         <nav>
           <Lien to="/" icon={Home} label="Accueil" onClick={fermer} />
-          <Lien to="/catalogue" icon={BookOpen} label="Catalogue" onClick={fermer} />
+          {/* Le catalogue est réservé aux utilisateurs connectés */}
+          {utilisateur && <Lien to="/catalogue" icon={BookOpen} label="Catalogue" onClick={fermer} />}
           {!utilisateur && <Lien to="/decouverte" icon={Sparkles} label="Quiz découverte" onClick={fermer} />}
           {utilisateur && <Lien to="/profil" icon={User} label="Mon profil" onClick={fermer} />}
           {estAdminRH && (

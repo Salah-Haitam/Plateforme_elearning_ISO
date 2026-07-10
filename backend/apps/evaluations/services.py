@@ -50,6 +50,10 @@ def recommander(apprenant):
     """Construit une liste de recommandations pour l'apprenant, à partir de ses
     niveaux de maîtrise. Chaque recommandation indique le cours suggéré et la
     raison (remédiation ou approfondissement).
+
+    `cours_suggere` est TOUJOURS renseigné : s'il n'existe pas d'autre cours sur
+    la même norme (cas fréquent quand le catalogue est petit), on renvoie vers le
+    cours lui-même, à revoir. La recommandation reste ainsi toujours cliquable.
     """
     recommandations = []
     profils = ProfilCompetence.objects.filter(apprenant=apprenant).select_related("cours")
@@ -70,7 +74,7 @@ def recommander(apprenant):
                 "type": "remediation",
                 "raison": f"Maîtrise faible ({round(niveau*100)}%) sur « {cours.titre} ».",
                 "cours_source": cours.id,
-                "cours_suggere": cible.id if cible else None,
+                "cours_suggere": cible.id if cible else cours.id,
                 "titre_suggere": cible.titre if cible else "Revoir ce cours",
             })
 
@@ -86,8 +90,8 @@ def recommander(apprenant):
                 "type": "approfondissement",
                 "raison": f"Bonne maîtrise ({round(niveau*100)}%) sur « {cours.titre} ».",
                 "cours_source": cours.id,
-                "cours_suggere": cible.id if cible else None,
-                "titre_suggere": cible.titre if cible else "Contenu avancé à venir",
+                "cours_suggere": cible.id if cible else cours.id,
+                "titre_suggere": cible.titre if cible else "Revoir ce cours",
             })
 
     return recommandations
